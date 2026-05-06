@@ -2,8 +2,8 @@ slam_toolbox:
   ros__parameters:
 
     # Chế độ và các Topic/Frame cơ sở
-    # (Phù hợp với node async_slam_toolbox_node)
-    mode: mapping
+    # Mode: online_async = chạy SLAM realtime mà không chặn (tối ưu cho siêu thị)
+    mode: online_async
     odom_frame: odom
     map_frame: map
     base_frame: base_link
@@ -11,7 +11,7 @@ slam_toolbox:
     use_sim_time: true
 
     # Cấu hình bản đồ cơ bản
-    map_resolution: 0.05
+    map_resolution: 0.05  # 5cm/pixel - chi tiết đủ cho siêu thị
     map_update_interval: 5.0 # Cập nhật map mỗi 5 giây
 
     # Các thông số tối ưu môi trường trong nhà (Siêu thị)

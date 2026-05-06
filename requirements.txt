@@ -2,3 +2,7 @@ flask
 flask-socketio
 opencv-python
 numpy
+pillow
+python-socketio
+ultralytics
+opencv-contrib-python

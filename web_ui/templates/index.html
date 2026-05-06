@@ -3,221 +3,391 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AMR Supermarket Control Center</title>
+    <title>🛒 Siêu thị AMR - Hệ thống Hỗ trợ Mua sắm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
     <style>
-        body { background-color: #1a1d20; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        .card { background-color: #2b3035; border: none; color: white; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-        .camera-feed { width: 100%; border-radius: 8px; border: 2px solid #495057; background-color: #000; min-height: 300px; }
-        .status-badge { font-size: 0.9rem; padding: 5px 12px; border-radius: 20px; }
-        .btn-shelf { transition: all 0.3s; height: 60px; font-weight: bold; margin-bottom: 10px; }
-        .btn-shelf:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.4); }
-        .product-item { cursor: pointer; transition: 0.2s; border-bottom: 1px solid #3d4246; padding: 10px; }
-        .product-item:hover { background-color: #3d4246; }
-        .cart-item { display: flex; justify-content: space-between; padding: 5px 0; font-size: 0.9rem; border-bottom: 1px solid #444; }
-        #product-list { height: 350px; overflow-y: auto; }
+        * { font-family: 'Roboto', sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px 0; }
+        .main-container { max-width: 1400px; margin: 0 auto; }
+        
+        /* HEADER */
+        .header { background: white; border-radius: 12px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .header h1 { color: #2196F3; font-weight: 700; margin: 0; }
+        .connection-badge { font-size: 14px; padding: 8px 16px; border-radius: 20px; }
+
+        /* CARD STYLES */
+        .card { background: white; border: none; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 20px; overflow: hidden; }
+        .card-header { background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); color: white; font-weight: 600; border-radius: 12px 12px 0 0; }
+        
+        /* TABS */
+        .nav-tabs { border-bottom: 2px solid #e0e0e0; }
+        .nav-link { color: #666; border: none; border-bottom: 3px solid transparent; border-radius: 0; font-weight: 600; padding: 15px 25px; }
+        .nav-link:hover { color: #2196F3; border-bottom-color: #2196F3; background: #f5f5f5; }
+        .nav-link.active { color: white; background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%); border-bottom-color: transparent; }
+
+        /* PRODUCT CARDS */
+        .product-card { background: white; border: 1px solid #e0e0e0; border-radius: 8px; padding: 15px; text-align: center; transition: all 0.3s; cursor: pointer; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(33, 150, 243, 0.2); border-color: #2196F3; }
+        .product-emoji { font-size: 48px; margin-bottom: 10px; }
+        .product-name { font-weight: 600; color: #333; margin: 10px 0; font-size: 14px; }
+        .product-price { color: #2196F3; font-weight: 700; font-size: 16px; margin-bottom: 10px; }
+        .btn-add { background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%); border: none; color: white; border-radius: 8px; width: 100%; }
+        .btn-add:hover { transform: scale(1.05); }
+
+        /* CAMERA FEED */
+        .camera-frame { width: 100%; border-radius: 8px; background: #000; min-height: 400px; object-fit: contain; }
+
+        /* SHELF BUTTONS */
+        .shelf-button { border-radius: 8px; font-weight: 600; padding: 12px; margin: 8px; transition: all 0.3s; border: none; }
+        .shelf-button:hover { transform: scale(1.05); }
+        .btn-emergency { background: #F44336; color: white; padding: 15px; border-radius: 8px; font-weight: 700; font-size: 16px; }
+        .btn-emergency:hover { background: #D32F2F; }
+
+        /* CART */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0; font-size: 14px; }
+        .cart-total { background: #f5f5f5; padding: 15px; border-radius: 8px; font-size: 18px; font-weight: 700; color: #2196F3; margin: 15px 0; }
+        .btn-checkout { background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%); color: white; border: none; border-radius: 8px; font-weight: 700; padding: 15px; width: 100%; }
+
+        /* ROBOT STATUS */
+        .status-box { background: #f5f5f5; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .status-label { color: #666; font-size: 12px; text-transform: uppercase; font-weight: 600; }
+        .status-value { color: #2196F3; font-size: 18px; font-weight: 700; margin-top: 5px; }
+        .battery-bar { background: #e0e0e0; height: 8px; border-radius: 4px; margin-top: 5px; overflow: hidden; }
+        .battery-fill { background: linear-gradient(90deg, #4CAF50 0%, #FFC107 50%, #F44336 100%); height: 100%; transition: width 0.3s; }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 20px; }
+            .product-card { padding: 10px; }
+            .product-emoji { font-size: 32px; }
+        }
     </style>
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark mb-4">
-    <div class="container-fluid">
-        <span class="navbar-brand mb-0 h1"><i class="fas fa-robot me-2"></i> AMR SUPERMARKET ASSISTANT</span>
-        <div class="d-flex">
-            <span id="connection-status" class="badge bg-danger">Disconnected</span>
-        </div>
+<div class="main-container">
+    <!-- HEADER -->
+    <div class="header d-flex justify-content-between align-items-center">
+        <h1>🛒 Siêu Thị AMR</h1>
+        <span id="connection-status" class="connection-badge badge bg-danger">Đang kết nối...</span>
     </div>
-</nav>
 
-<div class="container-fluid px-4">
-    <div class="row">
-        <div class="col-md-7">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-eye me-2"></i>Live AI Vision</h5>
-                    <span id="robot-state" class="badge bg-secondary status-badge">OFFLINE</span>
-                </div>
-                <div class="card-body p-1 text-center">
-                    <img id="video-stream" src="" class="camera-feed" alt="Đang chờ luồng video từ robot...">
+    <!-- NAV TABS -->
+    <div class="card">
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#tab-shopping" role="tab">
+                    <i class="fas fa-shopping-bag me-2"></i>Mua Hàng
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#tab-tracking" role="tab">
+                    <i class="fas fa-map me-2"></i>Theo Dõi Robot
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#tab-checkout" role="tab">
+                    <i class="fas fa-credit-card me-2"></i>Thanh Toán
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content p-4">
+
+            <!-- TAB 1: MUA HÀNG -->
+            <div class="tab-pane fade show active" id="tab-shopping" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="mb-3">🏪 Chọn Kệ Hàng</h5>
+                        <div class="row">
+                            <div class="col-6 col-md-4 mb-2"><button class="btn btn-outline-danger w-100 shelf-button" onclick="navTo('shelf_A')"><i class="fas fa-box me-1"></i> Kệ A</button></div>
+                            <div class="col-6 col-md-4 mb-2"><button class="btn btn-outline-primary w-100 shelf-button" onclick="navTo('shelf_B')"><i class="fas fa-box me-1"></i> Kệ B</button></div>
+                            <div class="col-6 col-md-4 mb-2"><button class="btn btn-outline-warning w-100 shelf-button" onclick="navTo('shelf_C')"><i class="fas fa-box me-1"></i> Kệ C</button></div>
+                            <div class="col-6 col-md-4 mb-2"><button class="btn btn-outline-dark w-100 shelf-button" onclick="navTo('shelf_D')"><i class="fas fa-box me-1"></i> Kệ D</button></div>
+                            <div class="col-6 col-md-4 mb-2"><button class="btn btn-outline-info w-100 shelf-button" onclick="navTo('shelf_E')"><i class="fas fa-box me-1"></i> Kệ E</button></div>
+                            <div class="col-6 col-md-4 mb-2"><button class="btn btn-outline-light w-100 shelf-button" onclick="navTo('shelf_F')"><i class="fas fa-box me-1"></i> Kệ F</button></div>
+                        </div>
+
+                        <h5 class="mt-4 mb-3">📦 Sản Phẩm Hiện Tại</h5>
+                        <div class="row" id="product-list">
+                            <div class="col-12 text-center text-muted py-5">
+                                <i class="fas fa-shopping-basket fa-3x mb-3"></i>
+                                <p>Robot chưa đến kệ hàng. Hãy chọn một kệ để bắt đầu!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <h5 class="mb-3">🛒 Giỏ Hàng (<span id="cart-count">0</span>)</h5>
+                        <div id="cart-items" class="mb-3" style="max-height: 300px; overflow-y: auto;">
+                            <p class="text-muted text-center py-3">Giỏ hàng trống</p>
+                        </div>
+                        <div class="cart-total">
+                            Tổng: <span id="cart-total">0</span> VNĐ
+                        </div>
+                        <button class="btn btn-checkout" onclick="goToCheckout()">
+                            <i class="fas fa-money-bill-wave me-2"></i>Thanh Toán Ngay
+                        </button>
+                        <button class="btn btn-outline-danger w-100 mt-2" onclick="clearCart()">
+                            <i class="fas fa-trash me-2"></i>Xóa Giỏ
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header"><h5><i class="fas fa-map-marker-alt me-2"></i>Điều khiển Kệ hàng</h5></div>
-                <div class="card-body">
-                    <div class="row g-2">
-                        <div class="col-4"><button onclick="navTo('A')" class="btn btn-outline-primary w-100 btn-shelf">Kệ A<br><small>Sữa & Nước</small></button></div>
-                        <div class="col-4"><button onclick="navTo('B')" class="btn btn-outline-success w-100 btn-shelf">Kệ B<br><small>Bánh kẹo</small></button></div>
-                        <div class="col-4"><button onclick="navTo('C')" class="btn btn-outline-warning w-100 btn-shelf">Kệ C<br><small>Rau củ</small></button></div>
-                        <div class="col-4"><button onclick="navTo('D')" class="btn btn-outline-danger w-100 btn-shelf">Kệ D<br><small>Thịt cá</small></button></div>
-                        <div class="col-4"><button onclick="navTo('E')" class="btn btn-outline-info w-100 btn-shelf">Kệ E<br><small>Đông lạnh</small></button></div>
-                        <div class="col-4"><button onclick="navTo('F')" class="btn btn-outline-light w-100 btn-shelf">Kệ F<br><small>Mỹ phẩm</small></button></div>
+            <!-- TAB 2: THEO DÕI ROBOT -->
+            <div class="tab-pane fade" id="tab-tracking" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="mb-3">📷 Camera Robot</h5>
+                        <div style="background: #f0f0f0; border-radius: 8px; text-align: center;">
+                            <img id="camera-feed" src="" alt="Camera feed" class="camera-frame" style="display: none;">
+                            <div id="camera-placeholder" style="padding: 40px; color: #999;">
+                                <i class="fas fa-video fa-3x mb-3"></i>
+                                <p>Chờ camera feed từ robot...</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="mt-3">
-                        <button onclick="stopRobot()" class="btn btn-danger w-100 fw-bold py-3"><i class="fas fa-hand-paper me-2"></i>DỪNG KHẨN CẤP</button>
-                    </div>
-                </div>
-            </div>
-        </div>
 
-        <div class="col-md-5">
-            <div class="card">
-                <div class="card-header bg-primary">
-                    <h5 class="mb-0 text-white"><i class="fas fa-boxes me-2"></i>Sản phẩm tại <span id="current-shelf-label">...</span></h5>
-                </div>
-                <div class="card-body p-0" id="product-list">
-                    <div class="text-center text-muted mt-5">
-                        <i class="fas fa-shopping-basket fa-3x mb-3"></i>
-                        <p>Robot chưa đến kệ hàng</p>
+                    <div class="col-md-4">
+                        <h5 class="mb-3">🤖 Trạng Thái Robot</h5>
+                        
+                        <div class="status-box">
+                            <div class="status-label">Trạng Thái</div>
+                            <div class="status-value"><span id="robot-state" class="badge bg-warning">CHƯA BIẾT</span></div>
+                        </div>
+
+                        <div class="status-box">
+                            <div class="status-label">Vị Trí Hiện Tại</div>
+                            <div class="status-value" id="robot-position">X: 0.5m, Y: 0m</div>
+                        </div>
+
+                        <div class="status-box">
+                            <div class="status-label">Đích Đến</div>
+                            <div class="status-value" id="robot-target">-</div>
+                        </div>
+
+                        <div class="status-box">
+                            <div class="status-label">Thời Gian Còn Lại</div>
+                            <div class="status-value" id="robot-eta">-</div>
+                        </div>
+
+                        <div class="status-box">
+                            <div class="status-label">Pin Robot</div>
+                            <div class="battery-bar">
+                                <div class="battery-fill" id="battery-fill" style="width: 100%;"></div>
+                            </div>
+                            <div class="status-value" style="font-size: 14px; margin-top: 5px;" id="battery-percent">100%</div>
+                        </div>
+
+                        <button class="btn btn-emergency w-100" onclick="stopRobot()">
+                            <i class="fas fa-hand-paper me-2"></i>DỪNG KHẨN CẤP
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <div class="card">
-                <div class="card-header bg-warning text-dark d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0"><i class="fas fa-shopping-cart me-2"></i>Giỏ hàng</h5>
-                    <button class="btn btn-sm btn-outline-dark" onclick="clearCart()">Xóa hết</button>
-                </div>
-                <div class="card-body">
-                    <div id="cart-items" style="min-height: 80px; max-height: 150px; overflow-y: auto;">
-                        <p class="text-muted text-center">Giỏ hàng trống</p>
+            <!-- TAB 3: THANH TOÁN -->
+            <div class="tab-pane fade" id="tab-checkout" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="mb-3">📋 Tóm Tắt Giỏ Hàng</h5>
+                        <div id="checkout-cart" class="mb-3" style="max-height: 300px; overflow-y: auto;">
+                            <p class="text-muted">Giỏ hàng trống</p>
+                        </div>
+                        <div class="cart-total" style="font-size: 24px;">
+                            <i class="fas fa-money-bill-wave me-2"></i>
+                            Tổng: <span id="checkout-total">0</span> VNĐ
+                        </div>
                     </div>
-                    <hr>
-                    <div class="d-flex justify-content-between fw-bold mb-3">
-                        <span>TỔNG CỘNG:</span>
-                        <span id="cart-total" class="text-warning fs-5">0 VNĐ</span>
+
+                    <div class="col-md-6">
+                        <h5 class="mb-3">💳 Xác Nhận Thanh Toán</h5>
+                        <button class="btn btn-checkout w-100 py-3 mb-3" onclick="confirmCheckout()">
+                            <i class="fas fa-check-circle me-2 fs-5"></i>
+                            <span class="fs-5">Robot Dẫn Đến Quầy</span>
+                        </button>
+
+                        <div id="qr-code" class="text-center" style="display: none;">
+                            <h6>Quét QR Code để thanh toán</h6>
+                            <svg width="200" height="200" style="background: white; padding: 10px; border-radius: 8px;">
+                                <rect x="20" y="20" width="160" height="160" fill="white" stroke="#333" stroke-width="2"/>
+                                <text x="100" y="115" text-anchor="middle" font-size="24" fill="#333">[QR]</text>
+                            </svg>
+                        </div>
+
+                        <div id="payment-status" class="alert alert-info" style="display: none;">
+                            <strong>Thông tin thanh toán:</strong>
+                            <p id="payment-message"></p>
+                        </div>
+
+                        <button class="btn btn-success w-100 py-2 mt-2" id="btn-confirm-payment" style="display: none;" onclick="confirmPayment()">
+                            ✅ Xác Nhận Đã Thanh Toán
+                        </button>
                     </div>
-                    <button onclick="checkout()" class="btn btn-success w-100 py-3 fw-bold"><i class="fas fa-check-circle me-2"></i>THANH TOÁN</button>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // 2. KHAI BÁO SOCKET DUY NHẤT VỚI CẤU HÌNH FIX LỖI 400/PROTOCOL
-    const socket = io({
-        transports: ['websocket'],
-        upgrade: false
-    });
+    const socket = io({ transports: ['websocket'], upgrade: false });
+    let productCatalog = {};
+    let cart = [];
 
-    let currentCatalog = {};
-
-    // 3. Xử lý Kết nối
+    // ========== SOCKET IO ==========
     socket.on('connect', () => {
-        console.log("✅ Connected to Server via Websocket");
-        document.getElementById('connection-status').className = "badge bg-success";
-        document.getElementById('connection-status').innerText = "Connected";
+        console.log('✅ Kết nối WebSocket thành công');
+        document.getElementById('connection-status').className = 'connection-badge badge bg-success';
+        document.getElementById('connection-status').innerText = 'Đã kết nối';
     });
 
     socket.on('disconnect', () => {
-        console.log("❌ Mất kết nối");
-        document.getElementById('connection-status').className = "badge bg-danger";
-        document.getElementById('connection-status').innerText = "Disconnected";
+        document.getElementById('connection-status').className = 'connection-badge badge bg-danger';
+        document.getElementById('connection-status').innerText = 'Mất kết nối';
     });
 
-    // 4. Nhận ảnh từ product_detector.py
+    socket.on('robot_status', (data) => {
+        updateRobotStatus(data);
+    });
+
     socket.on('camera_frame', (data) => {
         if (data.image) {
-            document.getElementById('video-stream').src = data.image;
+            document.getElementById('camera-feed').src = data.image;
+            document.getElementById('camera-feed').style.display = 'block';
+            document.getElementById('camera-placeholder').style.display = 'none';
         }
     });
 
-    // 5. Trạng thái robot
-    socket.on('robot_status', (data) => {
-        const stateBadge = document.getElementById('robot-state');
-        stateBadge.innerText = data.state || data.status;
-        
-        if(data.state === "AT_DESTINATION" || data.status === "CONFIRMED") {
-            stateBadge.className = "badge bg-success status-badge";
-            if (data.target) updateProductList(data.target);
-        } else if(data.state === "MOVING") {
-            stateBadge.className = "badge bg-warning text-dark status-badge";
+    socket.on('cart_updated', (data) => {
+        if (data.items) cart = data.items;
+        renderCart();
+    });
+
+    // ========== INIT ==========
+    fetch('/api/products').then(r => r.json()).then(data => { productCatalog = data; });
+
+    // ========== FUNCTIONS ==========
+    function updateRobotStatus(status) {
+        const stateBadges = {
+            'IDLE': 'secondary', 'NAVIGATING': 'warning', 'AT_DESTINATION': 'success',
+            'WAITING': 'info', 'RETURNING': 'primary'
+        };
+        const stateLabel = status.state || 'CHƯA BIẾT';
+        document.getElementById('robot-state').className = 'badge bg-' + (stateBadges[stateLabel] || 'secondary');
+        document.getElementById('robot-state').innerText = stateLabel;
+
+        if (status.position) {
+            document.getElementById('robot-position').innerText = `X: ${status.position.x.toFixed(1)}m, Y: ${status.position.y.toFixed(1)}m`;
         }
-    });
+        document.getElementById('robot-target').innerText = status.target || '-';
+        document.getElementById('robot-eta').innerText = status.eta ? status.eta + 's' : '-';
 
-    socket.on('cart_updated', (cartData) => {
-        renderCart(cartData);
-    });
+        if (typeof status.battery !== 'undefined') {
+            const battery = status.battery;
+            document.getElementById('battery-percent').innerText = battery.toFixed(1) + '%';
+            document.getElementById('battery-fill').style.width = battery + '%';
+        }
 
-    // Logic xử lý dữ liệu
-    fetch('/api/products').then(res => res.json()).then(data => { currentCatalog = data; });
-    refreshCart();
+        if (stateLabel === 'AT_DESTINATION' && status.target) {
+            loadProductList(status.target);
+        }
+    }
 
     function navTo(shelfId) {
-        socket.emit('navigate_to_shelf', { shelf: shelfId });
-        document.getElementById('product-list').innerHTML = `
-            <div class="text-center mt-5">
-                <div class="spinner-border text-primary"></div>
-                <p class="mt-2">Robot đang đi tới kệ ${shelfId}...</p>
-            </div>`;
+        fetch('/api/robot/navigate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ shelf: shelfId })
+        });
     }
 
     function stopRobot() {
-        socket.emit('emergency_stop', {});
+        fetch('/api/robot/stop', { method: 'POST' });
     }
 
-    function updateProductList(shelfId) {
-        if(!currentCatalog[shelfId]) return;
-        document.getElementById('current-shelf-label').innerText = "Kệ " + shelfId;
+    function goToCheckout() {
+        navTo('checkout_1');
+    }
+
+    function confirmCheckout() {
+        document.getElementById('qr-code').style.display = 'block';
+        document.getElementById('payment-status').style.display = 'block';
+        document.getElementById('payment-message').innerText = 'Robot dang đi tới quầy thanh toán...';
+        document.getElementById('btn-confirm-payment').style.display = 'block';
+    }
+
+    function confirmPayment() {
+        alert('✅ Cảm ơn bạn đã mua sắm!');
+        clearCart();
+    }
+
+    function loadProductList(shelfId) {
+        const shelf = shelfId.replace('shelf_', '').toUpperCase();
+        const products = productCatalog[shelf] || [];
         let html = '';
-        currentCatalog[shelfId].forEach(item => {
-            html += `
-                <div class="product-item d-flex align-items-center" onclick="addToCart('${shelfId}', '${item.id}')">
-                    <span class="fs-2 me-3">${item.emoji}</span>
-                    <div class="flex-grow-1">
-                        <div class="fw-bold">${item.name}</div>
-                        <div class="text-info">${item.price.toLocaleString()} VNĐ</div>
+        if (products.length === 0) {
+            html = '<div class="col-12 text-muted text-center py-3">Không có sản phẩm</div>';
+        } else {
+            products.forEach(p => {
+                html += `<div class="col-6 col-md-4 mb-3">
+                    <div class="product-card">
+                        <div class="product-emoji">${p.emoji}</div>
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price">${p.price.toLocaleString()} VNĐ</div>
+                        <button class="btn btn-add" onclick="addToCart('${shelf}', '${p.id}')">Thêm giỏ</button>
                     </div>
-                    <button class="btn btn-sm btn-primary"><i class="fas fa-cart-plus"></i></button>
                 </div>`;
-        });
+            });
+        }
         document.getElementById('product-list').innerHTML = html;
     }
 
-    function addToCart(shelfId, productId) {
-        const product = currentCatalog[shelfId].find(p => p.id === productId);
-        fetch('/api/cart/add', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(product)
-        }).then(res => res.json()).then(data => renderCart(data.cart));
+    function addToCart(shelf, productId) {
+        const product = productCatalog[shelf]?.find(p => p.id === productId);
+        if (product) {
+            fetch('/api/cart/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
+            }).then(r => r.json()).then(data => {
+                if (data.cart) { cart = data.cart; renderCart(); }
+            });
+        }
     }
 
-    function renderCart(cart) {
+    function renderCart() {
         let html = '';
         let total = 0;
-        if (!cart || cart.length === 0) {
-            html = '<p class="text-muted text-center">Giỏ hàng trống</p>';
+        if (cart.length === 0) {
+            html = '<p class="text-muted text-center py-3">Giỏ hàng trống</p>';
         } else {
-            cart.forEach(item => {
-                html += `<div class="cart-item"><span>${item.emoji} ${item.name}</span><span class="fw-bold text-warning">${item.price.toLocaleString()} đ</span></div>`;
+            cart.forEach((item, idx) => {
+                html += `<div class="cart-item">
+                    <span>${item.emoji} ${item.name}</span>
+                    <span class="fw-bold text-primary">${item.price.toLocaleString()} đ</span>
+                </div>`;
                 total += item.price;
             });
         }
         document.getElementById('cart-items').innerHTML = html;
-        document.getElementById('cart-total').innerText = total.toLocaleString() + ' VNĐ';
-    }
-
-    function refreshCart() {
-        fetch('/api/cart').then(res => res.json()).then(cart => renderCart(cart));
+        document.getElementById('checkout-cart').innerHTML = html;
+        document.getElementById('cart-count').innerText = cart.length;
+        document.getElementById('cart-total').innerText = total.toLocaleString();
+        document.getElementById('checkout-total').innerText = total.toLocaleString();
     }
 
     function clearCart() {
-        fetch('/api/cart/clear', {method: 'POST'}).then(() => renderCart([]));
-    }
-
-    function checkout() {
-        if(confirm("Xác nhận thanh toán?")) {
-            fetch('/api/robot/navigate', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({shelf: 'CHECKOUT'})
-            });
+        if (confirm('Xóa tất cả sản phẩm?')) {
+            fetch('/api/cart/clear', { method: 'POST' }).then(() => { cart = []; renderCart(); });
         }
     }
 </script>

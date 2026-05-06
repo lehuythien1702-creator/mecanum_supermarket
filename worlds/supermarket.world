@@ -5,119 +5,451 @@
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1</real_time_factor>
       <real_time_update_rate>1000</real_time_update_rate>
+      <gravity>0 0 -9.81</gravity>
     </physics>
 
+    <!-- Mặt trời -->
     <include>
       <uri>model://sun</uri>
     </include>
+
+    <!-- Mặt đất -->
     <include>
       <uri>model://ground_plane</uri>
     </include>
 
+    <!-- Đèn chiếu sáng trên trần -->
     <light name='overhead_light_1' type='point'>
-      <pose>5 0 4 0 0 0</pose>
-      <diffuse>0.8 0.8 0.8 1</diffuse>
-      <specular>0.2 0.2 0.2 1</specular>
-      <attenuation><range>20</range><constant>0.5</constant></attenuation>
-    </light>
-    <light name='overhead_light_2' type='point'>
-      <pose>15 0 4 0 0 0</pose>
-      <diffuse>0.8 0.8 0.8 1</diffuse>
-      <specular>0.2 0.2 0.2 1</specular>
-      <attenuation><range>20</range><constant>0.5</constant></attenuation>
+      <pose>7 2.5 3.5 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>20</range>
+        <constant>0.3</constant>
+        <linear>0.01</linear>
+      </attenuation>
     </light>
 
+    <light name='overhead_light_2' type='point'>
+      <pose>7 -2.5 3.5 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>20</range>
+        <constant>0.3</constant>
+        <linear>0.01</linear>
+      </attenuation>
+    </light>
+
+    <light name='overhead_light_3' type='point'>
+      <pose>14 2.5 3.5 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>20</range>
+        <constant>0.3</constant>
+        <linear>0.01</linear>
+      </attenuation>
+    </light>
+
+    <light name='overhead_light_4' type='point'>
+      <pose>14 -2.5 3.5 0 0 0</pose>
+      <diffuse>1 1 1 1</diffuse>
+      <specular>0.5 0.5 0.5 1</specular>
+      <attenuation>
+        <range>20</range>
+        <constant>0.3</constant>
+        <linear>0.01</linear>
+      </attenuation>
+    </light>
+
+    <!-- ========== TƯỜNG BAO QUANH 20x15m ========== -->
     <model name="supermarket_walls">
       <static>true</static>
       <link name="walls_link">
-        <visual name="wall_n_vis"><pose>10 7.5 1.25 0 0 0</pose><geometry><box><size>20 0.2 2.5</size></box></geometry><material><ambient>0.8 0.8 0.8 1</ambient></material></visual>
-        <collision name="wall_n_col"><pose>10 7.5 1.25 0 0 0</pose><geometry><box><size>20 0.2 2.5</size></box></geometry></collision>
-        
-        <visual name="wall_s_vis"><pose>10 -7.5 1.25 0 0 0</pose><geometry><box><size>20 0.2 2.5</size></box></geometry><material><ambient>0.8 0.8 0.8 1</ambient></material></visual>
-        <collision name="wall_s_col"><pose>10 -7.5 1.25 0 0 0</pose><geometry><box><size>20 0.2 2.5</size></box></geometry></collision>
+        <!-- Tường Bắc (North) - y=7.5 -->
+        <collision name="wall_n_col">
+          <pose>10 7.6 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>20 0.2 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="wall_n_vis">
+          <pose>10 7.6 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>20 0.2 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
 
-        <visual name="wall_e_vis"><pose>20 0 1.25 0 0 1.5708</pose><geometry><box><size>15 0.2 2.5</size></box></geometry><material><ambient>0.8 0.8 0.8 1</ambient></material></visual>
-        <collision name="wall_e_col"><pose>20 0 1.25 0 0 1.5708</pose><geometry><box><size>15 0.2 2.5</size></box></geometry></collision>
+        <!-- Tường Nam (South) - y=-7.5 -->
+        <collision name="wall_s_col">
+          <pose>10 -7.6 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>20 0.2 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="wall_s_vis">
+          <pose>10 -7.6 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>20 0.2 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
 
-        <visual name="wall_w_vis"><pose>0 0 1.25 0 0 1.5708</pose><geometry><box><size>15 0.2 2.5</size></box></geometry><material><ambient>0.8 0.8 0.8 1</ambient></material></visual>
-        <collision name="wall_w_col"><pose>0 0 1.25 0 0 1.5708</pose><geometry><box><size>15 0.2 2.5</size></box></geometry></collision>
+        <!-- Tường Đông (East) - x=20 -->
+        <collision name="wall_e_col">
+          <pose>20.1 0 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 15 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="wall_e_vis">
+          <pose>20.1 0 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 15 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
+
+        <!-- Tường Tây (West) - x=0 -->
+        <collision name="wall_w_col">
+          <pose>-0.1 0 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 15 2.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="wall_w_vis">
+          <pose>-0.1 0 1.25 0 0 0</pose>
+          <geometry>
+            <box>
+              <size>0.2 15 2.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.7 0.7 0.7 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="shelf_A"><static>true</static><pose>4 5 0.75 0 0 0</pose>
+    <!-- ========== 6 KỀ HÀNG ========== -->
+    <!-- Kệ A: Sữa & Nước - Màu đỏ - x=4, y=5 -->
+    <model name="shelf_A">
+      <static>true</static>
+      <pose>4 5 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>4 0.4 1.5</size></box></geometry><material><ambient>1 0 0 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>4 0.4 1.5</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.8 0 0 1</ambient>
+            <diffuse>1 0.1 0.1 1</diffuse>
+            <emissive>0 0 0 1</emissive>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="shelf_B"><static>true</static><pose>4 1 0.75 0 0 0</pose>
+    <!-- Kệ B: Bánh kẹo - Màu xanh - x=4, y=1 -->
+    <model name="shelf_B">
+      <static>true</static>
+      <pose>4 1 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>4 0.4 1.5</size></box></geometry><material><ambient>0 0 1 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>4 0.4 1.5</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.5 1 1</ambient>
+            <diffuse>0.1 0.6 1 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="shelf_C"><static>true</static><pose>4 -3 0.75 0 0 0</pose>
+    <!-- Kệ C: Rau củ - Màu vàng - x=4, y=-3 -->
+    <model name="shelf_C">
+      <static>true</static>
+      <pose>4 -3 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>4 0.4 1.5</size></box></geometry><material><ambient>1 1 0 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>4 0.4 1.5</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.8 0 1</ambient>
+            <diffuse>1 1 0.2 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="shelf_D"><static>true</static><pose>10 5 0.75 0 0 0</pose>
+    <!-- Kệ D: Thịt cá - Màu tím - x=10, y=5 -->
+    <model name="shelf_D">
+      <static>true</static>
+      <pose>10 5 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>4 0.4 1.5</size></box></geometry><material><ambient>0.5 0 0.5 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>4 0.4 1.5</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.6 0 0.8 1</ambient>
+            <diffuse>0.8 0.2 1 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="shelf_E"><static>true</static><pose>10 1 0.75 0 0 0</pose>
+    <!-- Kệ E: Đồ đông lạnh - Màu cam - x=10, y=1 -->
+    <model name="shelf_E">
+      <static>true</static>
+      <pose>10 1 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>4 0.4 1.5</size></box></geometry><material><ambient>1 0.5 0 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>4 0.4 1.5</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.5 0 1</ambient>
+            <diffuse>1 0.7 0.2 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="shelf_F"><static>true</static><pose>10 -3 0.75 0 0 0</pose>
+    <!-- Kệ F: Hóa mỹ phẩm - Màu hồng - x=10, y=-3 -->
+    <model name="shelf_F">
+      <static>true</static>
+      <pose>10 -3 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>4 0.4 1.5</size></box></geometry><material><ambient>1 0.6 0.8 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>4 0.4 1.5</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>4 0.4 1.5</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>1 0.4 0.7 1</ambient>
+            <diffuse>1 0.6 0.8 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="checkout_1"><static>true</static><pose>16 3 0.5 0 0 0</pose>
+    <!-- ========== QUẦY THANH TOÁN ========== -->
+    <!-- Quầy 1: x=16, y=3 -->
+    <model name="checkout_1">
+      <static>true</static>
+      <pose>16 3 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>2 1 1</size></box></geometry><material><ambient>0 0.3 0.8 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>2 1 1</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>1.5 1 1.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>1.5 1 1.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.4 0.8 1</ambient>
+            <diffuse>0.2 0.6 1 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="checkout_2"><static>true</static><pose>16 -1 0.5 0 0 0</pose>
+    <!-- Quầy 2: x=16, y=-1 -->
+    <model name="checkout_2">
+      <static>true</static>
+      <pose>16 -1 0 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><box><size>2 1 1</size></box></geometry><material><ambient>0 0.3 0.8 1</ambient></material></visual>
-        <collision name="col"><geometry><box><size>2 1 1</size></box></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <box>
+              <size>1.5 1 1.2</size>
+            </box>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <box>
+              <size>1.5 1 1.2</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0 0.4 0.8 1</ambient>
+            <diffuse>0.2 0.6 1 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="customer_1"><static>true</static><pose>7 5 0.9 0 0 0</pose>
+    <!-- ========== KHÁCH HÀNG (STATIC OBSTACLES) ========== -->
+    <!-- Khách 1 -->
+    <model name="customer_1">
+      <static>true</static>
+      <pose>6 3 0.4 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><cylinder><radius>0.3</radius><length>1.8</length></cylinder></geometry><material><ambient>0.8 0.1 0.1 1</ambient></material></visual>
-        <collision name="col"><geometry><cylinder><radius>0.3</radius><length>1.8</length></cylinder></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.8 0 0 1</ambient>
+            <diffuse>1 0.2 0.2 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="customer_2"><static>true</static><pose>7 -1 0.9 0 0 0</pose>
+    <!-- Khách 2 -->
+    <model name="customer_2">
+      <static>true</static>
+      <pose>12 -2 0.4 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><cylinder><radius>0.3</radius><length>1.8</length></cylinder></geometry><material><ambient>0.8 0.1 0.1 1</ambient></material></visual>
-        <collision name="col"><geometry><cylinder><radius>0.3</radius><length>1.8</length></cylinder></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.8 0 0 1</ambient>
+            <diffuse>1 0.2 0.2 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
-    <model name="customer_3"><static>true</static><pose>13 2 0.9 0 0 0</pose>
+    <!-- Khách 3 -->
+    <model name="customer_3">
+      <static>true</static>
+      <pose>8 -4.5 0.4 0 0 0</pose>
       <link name="link">
-        <visual name="vis"><geometry><cylinder><radius>0.3</radius><length>1.8</length></cylinder></geometry><material><ambient>0.8 0.1 0.1 1</ambient></material></visual>
-        <collision name="col"><geometry><cylinder><radius>0.3</radius><length>1.8</length></cylinder></geometry></collision>
+        <collision name="col">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <visual name="vis">
+          <geometry>
+            <cylinder>
+              <radius>0.3</radius>
+              <length>0.8</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.8 0 0 1</ambient>
+            <diffuse>1 0.2 0.2 1</diffuse>
+          </material>
+        </visual>
       </link>
     </model>
 
