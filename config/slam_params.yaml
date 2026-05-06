@@ -1,0 +1,31 @@
+slam_toolbox:
+  ros__parameters:
+    # Cài đặt cơ bản cho mô phỏng
+    use_sim_time: true
+    
+    # Khai báo các khung tọa độ (TF Frames)
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_footprint
+    scan_topic: /scan
+    
+    # Chế độ hoạt động (mapping để vẽ bản đồ mới)
+    mode: mapping 
+    
+    # Cài đặt bản đồ
+    map_resolution: 0.05
+    map_update_interval: 2.0 # Cập nhật map mỗi 2 giây
+    
+    # Thông số cấu hình thuật toán SLAM
+    max_laser_range: 12.0 # Bằng với tầm nhìn của RPLidar A1
+    minimum_time_interval: 0.5
+    transform_timeout: 0.2
+    tf_buffer_duration: 30.
+    stack_size_to_use: 40000000
+
+    # Cấu hình tối ưu vòng lặp (Loop Closure)
+    do_loop_closing: true
+    loop_match_minimum_chain_size: 10
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_coarse: 0.35
+    loop_match_minimum_response_fine: 0.45

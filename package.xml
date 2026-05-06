@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>mecanum_rl_description</name>
+  <version>0.0.1</version>
+  <description>ROS2 Gazebo supermarket assistant robot with mecanum drive, Nav2, and YOLO.</description>
+  <maintainer email="lehuythien1702@gmail.com">lehuythien</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+  <depend>rclpy</depend>
+  <depend>robot_state_publisher</depend>
+  <depend>gazebo_ros</depend>
+  <depend>launch</depend>
+  <depend>launch_ros</depend>
+  <depend>xacro</depend>
+
+  <depend>ros2_control</depend>
+  <depend>ros2_controllers</depend>
+  <depend>controller_manager</depend>
+  <depend>joint_state_broadcaster</depend>
+
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>nav_msgs</depend>
+  <depend>nav2_msgs</depend>
+
+  <depend>nav2_bringup</depend>
+  <depend>slam_toolbox</depend>
+
+  <depend>cv_bridge</depend>
+  <depend>image_transport</depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+  </export>
+</package>

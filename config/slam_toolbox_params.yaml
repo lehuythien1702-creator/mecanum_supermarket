@@ -1,0 +1,44 @@
+slam_toolbox:
+  ros__parameters:
+
+    # Chế độ và các Topic/Frame cơ sở
+    # (Phù hợp với node async_slam_toolbox_node)
+    mode: mapping
+    odom_frame: odom
+    map_frame: map
+    base_frame: base_link
+    scan_topic: /scan
+    use_sim_time: true
+
+    # Cấu hình bản đồ cơ bản
+    map_resolution: 0.05
+    map_update_interval: 5.0 # Cập nhật map mỗi 5 giây
+
+    # Các thông số tối ưu môi trường trong nhà (Siêu thị)
+    max_laser_range: 12.0 # Tầm quét tối đa của LiDAR mô phỏng
+    minimum_time_interval: 0.5
+    transform_timeout: 0.2
+    tf_buffer_duration: 30.0
+    stack_size_to_use: 40000000 # Cấp phát đủ bộ nhớ để không bị crash khi map lớn
+
+    # Thuật toán Scan Matcher (Nối các tia quét để tạo hình dáng tường/kệ)
+    use_scan_matching: true
+    use_scan_barycenter: true
+    minimum_travel_distance: 0.5
+    minimum_travel_heading: 0.5
+    scan_buffer_size: 10
+    scan_buffer_maximum_scan_distance: 10.0
+    link_match_minimum_response_fine: 0.1  
+    link_scan_maximum_distance: 1.5
+
+    # Cấu hình Loop Closure (Cực kỳ quan trọng để bản đồ không bị méo)
+    do_loop_closing: true
+    loop_match_minimum_chain_size: 10
+    loop_match_maximum_variance_coarse: 3.0
+    loop_match_minimum_response_coarse: 0.35
+    loop_match_minimum_response_fine: 0.45
+
+    # Các thông số liên quan đến độ chính xác tương quan
+    correlation_search_space_dimension: 0.5
+    correlation_search_space_resolution: 0.01
+    correlation_search_space_smear_deviation: 0.1
